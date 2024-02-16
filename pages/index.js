@@ -12,7 +12,7 @@ let dinosaur = {
   height: 80,
   speedY: 0,
   gravity: 0.2,
-  jumpPower: -7,
+  jumpPower: -9,
   jumping: false,
   jumpCount: 0,
 };
@@ -92,8 +92,8 @@ function drawObstacles() {
 }
 
 function createObstacle() {
-  const minHeight = 20;
-  const maxHeight = 80;
+  const minHeight = 50;
+  const maxHeight = 160;
   const randomHeight =
     Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
 
@@ -113,7 +113,7 @@ function createObstacle() {
   const obstacle = {
     x: obstacleX,
     y: canvas.height - randomHeight,
-    width: 30,
+    width: 40,
     height: randomHeight,
   };
   obstacles.push(obstacle);
