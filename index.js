@@ -26,10 +26,14 @@ const jumpSound = new Audio("../assets/sounds/cartoon-jump-6462.mp3");
 const collisionSound = new Audio("../assets/sounds/collision.mp3");
 
 function drawGround() {
-  
-  const gradient = ctx.createLinearGradient(0, canvas.height - groundHeight, 0, canvas.height);
-  gradient.addColorStop(1, 'blue');
-  gradient.addColorStop(0, 'aquamarine');
+  const gradient = ctx.createLinearGradient(
+    0,
+    canvas.height - groundHeight,
+    0,
+    canvas.height
+  );
+  gradient.addColorStop(1, "blue");
+  gradient.addColorStop(0, "aquamarine");
 
   ctx.fillStyle = gradient;
   ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
@@ -43,10 +47,10 @@ function drawMoon(color, x, y, radius) {
   ctx.fill();
 }
 
-function drawSnowStorm(){
-  for(let i=1; i<=40;i++){
+function drawSnowStorm() {
+  for (let i = 1; i <= 40; i++) {
     drawSnow("white", 3.5);
-  }  
+  }
 }
 
 function drawSnow(color, radius) {
@@ -61,9 +65,6 @@ function drawSnow(color, radius) {
   ctx.closePath();
   ctx.fill();
 }
-
-
-
 
 function drawSnowman(y) {
   const headYMutiplier = 1.5;
@@ -84,13 +85,13 @@ function drawSnowman(y) {
   drawCircle("#000", 100, 530 + y * bodyYMutiplier, 2); // low middle button
   drawCircle("#000", 100, 510 + y * bodyYMutiplier, 2); // low top button
 
-  drawTriangle("#FFA500", 100, 391    + y * headYMutiplier, 8); // nose
+  drawTriangle("#FFA500", 100, 391 + y * headYMutiplier, 8); // nose
 
   drawRectangle("red", 80, 356 + y * hatYMultiplier, 40, 5); // hat bottom
   drawRectangle("green", 85, 336 + y * hatYMultiplier, 30, 20); // hat top
 
-  drawRectangle("red", 82, 395+ y * hatYMultiplier, 35, 11); // scarf
-  drawRectangle("green",117, 395 + y * hatYMultiplier, 9, 35 ) //scarf 2
+  drawRectangle("red", 82, 395 + y * hatYMultiplier, 35, 11); // scarf
+  drawRectangle("green", 117, 395 + y * hatYMultiplier, 9, 35); //scarf 2
 
   drawRectangle("#44261c", 137, 445 + y * bodyYMutiplier, 30, 7); // right arm
   drawRectangle("#44261c", 33, 445 + y * bodyYMutiplier, 30, 7); // left arm
@@ -130,9 +131,9 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   console.log(snowmanY);
-  
-  drawMoon("lightyellow", 850, 50, 30); 
-  drawSnowStorm("white", 3); 
+
+  drawMoon("lightyellow", 850, 50, 30);
+  drawSnowStorm("white", 3);
   drawSnowman(jumpingY);
   drawGround();
   drawObstacles();
@@ -159,7 +160,7 @@ const draw = () => {
   ctx.fillStyle = "black";
   ctx.font = "20px courier";
   score++;
-  ctx.fillText(Math.floor(score / 10), 5, 40);
+  ctx.fillText(Math.floor(score / 10), 40, 60);
 };
 
 function drawObstacles() {
