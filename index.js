@@ -43,13 +43,13 @@ function drawMoon(color, x, y, radius) {
   ctx.fill();
 }
 
-function drawStars(){
+function drawSnowStorm(){
   for(let i=1; i<=40;i++){
-    drawStar("white", 3.5);
+    drawSnow("white", 3.5);
   }  
 }
 
-function drawStar(color, radius) {
+function drawSnow(color, radius) {
   const canvasWidth = 1000; // Adjust based on your canvas width
   const canvasHeight = 600; // Adjust based on your canvas height
   const x = Math.random() * canvasWidth;
@@ -132,7 +132,7 @@ const draw = () => {
   console.log(snowmanY);
   
   drawMoon("lightyellow", 850, 50, 30); 
-  drawStars("white", 3); 
+  drawSnowStorm("white", 3); 
   drawSnowman(jumpingY);
   drawGround();
   drawObstacles();
