@@ -19,7 +19,7 @@ body {
   border: solid 1px black;
   margin: 0 auto;
   background: #eee;
-  background: aliceblue;
+  background: rgb(40, 127, 203); 
 }
 
 .title {
