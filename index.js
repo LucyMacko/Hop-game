@@ -77,12 +77,12 @@ function drawSnowman(y) {
   drawCircle("#000", 110, 381 + y * headYMutiplier, 2); // left eye
   drawCircle("#000", 90, 381 + y * headYMutiplier, 2); // right eye
 
-  drawCircle("#000", 100, 425 + y * bodyYMutiplier, 1.5); // mid bottom button
-  drawCircle("#000", 100, 445 + y * bodyYMutiplier, 1.5); // mid middle button
-  drawCircle("#000", 100, 465 + y * bodyYMutiplier, 1.5); // mid top button
-  drawCircle("#000", 100, 550 + y * bodyYMutiplier, 1.5); // low bottom button
-  drawCircle("#000", 100, 530 + y * bodyYMutiplier, 1.5); // low middle button
-  drawCircle("#000", 100, 510 + y * bodyYMutiplier, 1.5); // low top button
+  drawCircle("#000", 100, 425 + y * bodyYMutiplier, 2); // mid bottom button
+  drawCircle("#000", 100, 445 + y * bodyYMutiplier, 2); // mid middle button
+  drawCircle("#000", 100, 465 + y * bodyYMutiplier, 2); // mid top button
+  drawCircle("#000", 100, 550 + y * bodyYMutiplier, 2); // low bottom button
+  drawCircle("#000", 100, 530 + y * bodyYMutiplier, 2); // low middle button
+  drawCircle("#000", 100, 510 + y * bodyYMutiplier, 2); // low top button
 
   drawTriangle("#FFA500", 100, 391    + y * headYMutiplier, 8); // nose
 
