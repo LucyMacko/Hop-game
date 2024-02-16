@@ -1,29 +1,119 @@
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
+let obstacles = [];
+let score = 0;
+
 let snowmanRadius = 50;
 let jumpingY = 0;
 let snowmanY = 580 + jumpingY;
 let snowmanX = 100;
 let isJumping = false;
-let g = 9.81;
-let velocity = 20;
-let isPlaying = false;
 
-let obstacles = [];
-let score = 0;
-let obstacleInterval;
-let gameOverFlag = false;
 let groundHeight = 20;
 let maxJumpingY = -150;
 
-const snowmanHeight = 530 + 443 + 381;
+const g = 9.81;
+let velocity = 20;
+
+let obstacleInterval;
+let gameOverFlag = false;
+let isGameOver = false;
+let isPaused = false;
+let isPlaying = false;
 
 const backgroundMusic = new Audio(
   "../assets/sounds/cosmic-minimal-music-fragment-55131.mp3"
 );
 const jumpSound = new Audio("../assets/sounds/cartoon-jump-6462.mp3");
 const collisionSound = new Audio("../assets/sounds/collision.mp3");
+
+backgroundMusic.loop = true;
+
+const resetGame = () => {
+  score = 0;
+  obstacles = [];
+  isPlaying = false;
+  isGameOver = false;
+  isPaused = false;
+};
+
+const handleKeyPress = (e) => {
+  switch (e.key) {
+    case " ":
+      jumpSound.currentTime = 0;
+      jumpSound.play();
+      if (snowmanY < 579) return;
+      isJumping = true;
+      break;
+    case "p":
+      if (!isGameOver && score !== 0) {
+        isPaused = !isPaused;
+        isPlaying = !isPlaying;
+      }
+      break;
+    case "Enter":
+      if (!isPaused && !isPlaying)
+        isGameOver ? resetGame() : (isPlaying = true);
+      break;
+
+    default:
+      break;
+  }
+  if (e.key === " ") {
+  }
+};
+
+const draw = () => {
+  if (!isPlaying) {
+    backgroundMusic.pause();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (isGameOver) drawGameOver();
+    else if (isPaused) drawPause();
+    else drawRules();
+
+    drawStartNewGame();
+  }
+
+  if (isPlaying) {
+    backgroundMusic.play();
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawMoon("lightyellow", 850, 50, 30);
+    drawSnowStorm("white", 3);
+    drawSnowman(jumpingY);
+    drawGround();
+    drawObstacles();
+    updateObstacles();
+
+    if (isJumping) {
+      if (jumpingY > maxJumpingY) {
+        velocity = Math.sqrt((canvas.height - jumpingY) * g * 0.2);
+        jumpingY = jumpingY - velocity * 0.15;
+      } else if (jumpingY <= maxJumpingY) {
+        isJumping = false;
+      }
+    }
+    if (!isJumping) {
+      if (jumpingY < 0) {
+        velocity = Math.sqrt((canvas.height - jumpingY) * g * 0.2);
+        jumpingY = jumpingY + velocity * 0.15;
+      }
+    }
+    snowmanY = 580 + jumpingY;
+
+    collision();
+
+    ctx.fillStyle = "black";
+    ctx.font = "20px courier";
+    score++;
+    ctx.fillText(score, 40, 60);
+  }
+
+  requestAnimationFrame(draw);
+};
 
 function drawGround() {
   const gradient = ctx.createLinearGradient(
@@ -120,48 +210,37 @@ function drawRectangle(color, x, y, width, height) {
   ctx.fillRect(x, y, width, height);
 }
 
-const handleKeyPress = (e) => {
-  if (snowmanY < 579) return;
-  if (e.key === " ") {
-    console.log("hello");
-    isJumping = true;
-  }
+const drawGameOver = () => {
+  ctx.font = "24px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(`Game Over`, 400, 300);
+
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(`Score: ${score}`, 425, 330);
 };
 
-const draw = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+const drawRules = () => {
+  ctx.font = "18px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(`"Space bar" : jump`, 375, 300);
+  ctx.fillText(`"P" : Pause/Unpause`, 375, 330);
+};
 
-  console.log(snowmanY);
+const drawStartNewGame = () => {
+  ctx.font = "18px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(`Press "Enter" to start a new game`, 325, 500);
+};
 
-  drawMoon("lightyellow", 850, 50, 30);
-  drawSnowStorm("white", 3);
-  drawSnowman(jumpingY);
-  drawGround();
-  drawObstacles();
-  updateObstacles();
+const drawPause = () => {
+  ctx.font = "24px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(`Pause`, 415, 300);
 
-  if (isJumping) {
-    if (jumpingY > maxJumpingY) {
-      velocity = Math.sqrt((canvas.height - jumpingY) * g * 0.2);
-      jumpingY = jumpingY - velocity * 0.15;
-    } else if (jumpingY <= maxJumpingY) {
-      isJumping = false;
-    }
-  }
-  if (!isJumping) {
-    if (jumpingY < 0) {
-      velocity = Math.sqrt((canvas.height - jumpingY) * g * 0.2);
-      jumpingY = jumpingY + velocity * 0.15;
-    }
-  }
-  snowmanY = 580 + jumpingY;
-
-  collision();
-
-  ctx.fillStyle = "black";
-  ctx.font = "20px courier";
-  score++;
-  ctx.fillText(Math.floor(score / 10), 40, 60);
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(`Press 'P' to continue`, 375, 330);
 };
 
 function drawObstacles() {
@@ -233,27 +312,6 @@ function updateObstacles() {
   });
 }
 
-// function checkCollisions() {
-//   obstacles.forEach((obstacle) => {
-//     if (
-//       snowmanX < obstacle.x + obstacle.width &&
-//       snowmanX > obstacle.x &&
-//       snowmanY > obstacle.y &&
-//       snowmanY < obstacle.y + obstacle.height
-//     ) {
-//       if (snowmanY < obstacle.y + 20) {
-//         score++;
-//       } else {
-//         // gameOver();
-//         alert("oops");
-
-//         collisionSound.currentTime = 0;
-//         collisionSound.play();
-//       }
-//     }
-//   });
-// }
-
 const collision = () => {
   obstacles.forEach((obstacle) => {
     if (snowmanY > obstacle.y) {
@@ -261,7 +319,9 @@ const collision = () => {
         snowmanX - snowmanRadius + 20 < obstacle.x &&
         snowmanX + snowmanRadius - 20 > obstacle.x
       ) {
-        console.log("you lose");
+        collisionSound.play();
+        isGameOver = true;
+        isPlaying = false;
       }
     } else {
       if (
@@ -274,7 +334,8 @@ const collision = () => {
   });
 };
 
-setInterval(draw, 10);
+// setInterval(draw, 10);
+draw();
 setInterval(createObstacle, 3000);
 
 document.addEventListener("keypress", handleKeyPress, false);
