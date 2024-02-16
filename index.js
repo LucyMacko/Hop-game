@@ -112,7 +112,7 @@ const draw = () => {
     ctx.fillStyle = "black";
     ctx.font = "20px courier";
     score++;
-    ctx.fillText(score, 40, 60);
+    ctx.fillText(Math.floor(score / 10), 40, 60);
   }
 
   requestAnimationFrame(draw);
@@ -224,24 +224,24 @@ const drawGameOver = () => {
 };
 
 const drawRules = () => {
-  ctx.font = "18px Arial";
+  ctx.font = "18px courier";
   ctx.fillStyle = "#fff";
   ctx.fillText(`"Space bar" : jump`, 375, 300);
   ctx.fillText(`"P" : Pause/Unpause`, 375, 330);
 };
 
 const drawStartNewGame = () => {
-  ctx.font = "18px Arial";
+  ctx.font = "18px courier";
   ctx.fillStyle = "#fff";
   ctx.fillText(`Press "Enter" to start a new game`, 325, 500);
 };
 
 const drawPause = () => {
-  ctx.font = "24px Arial";
+  ctx.font = "24px courier";
   ctx.fillStyle = "#fff";
   ctx.fillText(`Pause`, 415, 300);
 
-  ctx.font = "16px Arial";
+  ctx.font = "16px courier";
   ctx.fillStyle = "#fff";
   ctx.fillText(`Press 'P' to continue`, 375, 330);
 
@@ -302,7 +302,7 @@ function drawObstacles() {
 
 function createObstacle() {
   const minHeight = 50;
-  const maxHeight = 160;
+  const maxHeight = 140;
   const randomHeight =
     Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
 
