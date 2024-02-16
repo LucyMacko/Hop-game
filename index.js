@@ -13,7 +13,7 @@ let snowmanX = 100;
 let isJumping = false;
 
 let groundHeight = 20;
-let maxJumpingY = -150;
+let maxJumpingY = -200;
 
 const g = 9.81;
 let velocity = 20;
@@ -321,7 +321,7 @@ function createObstacle() {
 
   const obstacle = {
     x: obstacleX,
-    y: canvas.height - randomHeight,
+    y: canvas.height - randomHeight - groundHeight,
     width: 40,
     height: randomHeight,
   };
