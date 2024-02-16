@@ -18,17 +18,20 @@ function drawSnowman(ctx) {
     drawCircle(ctx, "#000", 110, 381, 2);   // left eye
     drawCircle(ctx, "#000", 90, 381, 2);    // right eye
     
-    drawCircle(ctx, "#000", 100, 425, 1.5); // bottom button
-    drawCircle(ctx, "#000", 100, 445, 1.5);// middle button
-    drawCircle(ctx, "#000", 100, 465, 1.5);// top button
+    drawCircle(ctx, "#000", 100, 425, 1.5);// middle bottom button
+    drawCircle(ctx, "#000", 100, 445, 1.5);// middle middle button
+    drawCircle(ctx, "#000", 100, 465, 1.5);// middle top button
+    drawCircle(ctx, "#000", 100, 505, 1.5);// down bottom button
+    drawCircle(ctx, "#000", 100, 530, 1.5);// down middle button
+    drawCircle(ctx, "#000", 100, 555, 1.5);// down top button
     
-    drawTriangle(ctx, "#FFA500", 100, 387, 3.5); // nose
+    drawTriangle(ctx, "#FFA500", 100, 391, 7); // nose
     
-    drawRectangle(ctx, "#555454", 80, 356, 40, 5);  // hat bottom
-    drawRectangle(ctx, "#555454", 85, 340, 30, 20); // hat top
+    drawRectangle(ctx, "red", 80, 356, 40, 5);  // hat bottom
+    drawRectangle(ctx, "green", 85, 337, 30, 20); // hat top
     
-    drawRectangle(ctx, "#44261c", 135, 445, 40, 5); // right arm
-    drawRectangle(ctx, "#44261c", 25, 445, 40, 5);  // left arm
+    drawRectangle(ctx, "#44261c", 135, 445, 30, 5); // right arm
+    drawRectangle(ctx, "#44261c", 35, 445, 30, 5);  // left arm
 }
 
 drawSnowman(ctx);
