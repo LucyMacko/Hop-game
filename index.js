@@ -2,7 +2,6 @@ const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 const restartButton = document.getElementById("restartButton");
 
-// let gameStarted = false;
 let obstacles = [];
 let score = 0;
 
@@ -23,6 +22,22 @@ let gameOverFlag = false;
 let isGameOver = false;
 let isPaused = false;
 let isPlaying = false;
+document.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    startGame();
+  }
+});
+function displayIntroStory() {
+  alert(
+    "In the heart of a snowy mountain range, a friendly snowman finds himself in a dire situation. A colossal avalanche is racing down the mountainside, threatening to bury everything in its path! With no time to waste, our brave snowman must navigate through treacherous obstacles and icy perils to escape the avalanche's fury. Will you guide our frosty friend to safety? Press 'Enter' to begin the adventure!"
+  );
+}
+displayIntroStory();
+let bestScore = localStorage.getItem("bestScore") || 0;
+
+function startGame() {
+  document.querySelector(".intro-container").style.display = "none";
+}
 
 const backgroundMusic = new Audio(
   "./assets/sounds/cosmic-minimal-music-fragment-55131.mp3"
@@ -33,6 +48,18 @@ backgroundMusic.loop = true;
 
 backgroundMusic.loop = true;
 
+function updateBestScore(score) {
+  if (score > bestScore) {
+    bestScore = score;
+    localStorage.setItem("bestScore", bestScore);
+  }
+}
+
+function displayBestScore(ctx) {
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "20px Arial";
+  ctx.fillText("Best Score: " + bestScore, canvas.width - 150, 30);
+}
 const resetGame = () => {
   score = 0;
   obstacles = [];
@@ -75,7 +102,8 @@ const draw = () => {
     if (isGameOver) drawGameOver();
     else if (isPaused) drawPause();
     else drawRules();
-
+    updateBestScore(score);
+    displayBestScore(ctx);
     drawStartNewGame();
   }
 
@@ -111,8 +139,7 @@ const draw = () => {
 
     ctx.fillStyle = "black";
     ctx.font = "20px courier";
-    score++;
-    ctx.fillText(Math.floor(score / 10), 40, 60);
+    ctx.fillText(Math.floor(score), 40, 60);
   }
 
   requestAnimationFrame(draw);
@@ -147,8 +174,8 @@ function drawSnowStorm() {
 }
 
 function drawSnow(color, radius) {
-  const canvasWidth = 1000; // Adjust based on your canvas width
-  const canvasHeight = 600; // Adjust based on your canvas height
+  const canvasWidth = 1000;
+  const canvasHeight = 600;
   const x = Math.random() * canvasWidth;
   const y = Math.random() * canvasHeight;
 
@@ -244,35 +271,6 @@ const drawPause = () => {
   ctx.font = "16px courier";
   ctx.fillStyle = "#fff";
   ctx.fillText(`Press 'P' to continue`, 375, 330);
-
-  // if (isJumping && !gameOverFlag) {
-  //   if (jumpingY > maxJumpingY) {
-  //     if (backgroundMusic.paused) {
-  //       backgroundMusic.play();
-  //     }
-  //     jumpSound.currentTime = 0;
-  //     jumpSound.play();
-
-  //     velocity = Math.sqrt((canvas.height - jumpingY) * g * 0.2);
-  //     jumpingY = jumpingY - velocity * 0.15;
-  //   } else if (jumpingY <= maxJumpingY) {
-  //     isJumping = false;
-  //   }
-  // }
-  // if (!isJumping) {
-  //   if (jumpingY < 0) {
-  //     velocity = Math.sqrt((canvas.height - jumpingY) * g * 0.2);
-  //     jumpingY = jumpingY + velocity * 0.15;
-  //   }
-  // }
-  // snowmanY = 580 + jumpingY;
-
-  // collision();
-
-  // ctx.fillStyle = "black";
-  // ctx.font = "20px courier";
-  // score++;
-  // ctx.fillText(Math.floor(score / 10), 40, 60);
 };
 
 function drawObstacles() {
@@ -343,13 +341,6 @@ function updateObstacles() {
     }
   });
 }
-// function restartGame() {
-//   gameStarted = false;
-//   backgroundMusic.play();
-//   jumpSound.pause();
-//   collisionSound.pause();
-//   document.location.reload();
-// }
 
 const collision = () => {
   obstacles.forEach((obstacle) => {
@@ -364,24 +355,9 @@ const collision = () => {
         isGameOver = true;
         isPlaying = false;
       }
-    } else {
-      if (
-        snowmanX - snowmanRadius + 20 < obstacle.x &&
-        snowmanX + snowmanRadius - 20 > obstacle.x
-      ) {
-        score++;
-      }
     }
   });
 };
-// function gameOver() {
-//   clearInterval(obstacleInterval);
-//   gameOverFlag = true;
-//   restartButton.style.display = "block";
-//   restartButton.addEventListener("click", restartGame);
-//   backgroundMusic.pause();
-// }
-
 draw();
 setInterval(createObstacle, 3000);
 
