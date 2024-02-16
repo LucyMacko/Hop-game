@@ -121,6 +121,7 @@ function drawRectangle(color, x, y, width, height) {
 }
 
 const handleKeyPress = (e) => {
+  if (snowmanY < 579) return;
   if (e.key === " ") {
     console.log("hello");
     isJumping = true;
