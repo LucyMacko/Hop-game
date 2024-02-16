@@ -28,6 +28,18 @@ const jumpSound = new Audio("./assets/sounds/cartoon-jump-6462.mp3");
 const collisionSound = new Audio("./assets/sounds/collision.mp3");
 backgroundMusic.loop = true;
 
+const drawStartInterface = () => {
+  if (gameStarted === false) {
+    setTimeout(() => {
+      ctx.fillStyle = "black";
+      ctx.font = "25px courier";
+      ctx.fillText("Press Enter for snow, man.", 315, 280);
+    }, 1000);
+  }
+};
+
+drawStartInterface();
+
 function drawGround() {
   const gradient = ctx.createLinearGradient(
     0,
@@ -145,9 +157,6 @@ const draw = () => {
 
   if (isJumping && !gameOverFlag) {
     if (jumpingY > maxJumpingY) {
-      if (backgroundMusic.paused) {
-        backgroundMusic.play();
-      }
       jumpSound.currentTime = 0;
       jumpSound.play();
 
@@ -169,8 +178,16 @@ const draw = () => {
 
   ctx.fillStyle = "black";
   ctx.font = "20px courier";
-  score++;
+  if (gameOverFlag === false) {
+    score++;
+  }
   ctx.fillText(Math.floor(score / 10), 40, 60);
+
+  if (gameOverFlag === true) {
+    ctx.fillStyle = "black";
+    ctx.font = "25px courier";
+    ctx.fillText("Game over snowman", 368, 200);
+  }
 };
 
 function drawObstacles() {
@@ -200,7 +217,7 @@ function drawObstacles() {
 
 function createObstacle() {
   const minHeight = 50;
-  const maxHeight = 160;
+  const maxHeight = 120;
   const randomHeight =
     Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
 
@@ -298,7 +315,17 @@ function gameOver() {
   restartButton.addEventListener("click", restartGame);
   backgroundMusic.pause();
 }
-setInterval(draw, 10);
-setInterval(createObstacle, 3000);
 
+const handleStartDraw = (e) => {
+  if (e.code === "Enter") {
+    setInterval(draw, 10);
+    setInterval(createObstacle, 3000);
+    if (backgroundMusic.paused) {
+      backgroundMusic.play();
+    }
+  }
+  document.removeEventListener("keydown", handleStartDraw);
+};
+
+document.addEventListener("keydown", handleStartDraw);
 document.addEventListener("keypress", handleKeyPress, false);
