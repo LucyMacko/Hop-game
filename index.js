@@ -1,6 +1,8 @@
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
+const restartButton = document.getElementById("restartButton");
 
+let gameStarted = false;
 let snowmanRadius = 50;
 let jumpingY = 0;
 let snowmanY = 580 + jumpingY;
@@ -24,6 +26,7 @@ const backgroundMusic = new Audio(
 );
 const jumpSound = new Audio("./assets/sounds/cartoon-jump-6462.mp3");
 const collisionSound = new Audio("./assets/sounds/collision.mp3");
+backgroundMusic.loop = true;
 
 function drawGround() {
   const gradient = ctx.createLinearGradient(
@@ -139,8 +142,14 @@ const draw = () => {
   drawObstacles();
   updateObstacles();
 
-  if (isJumping) {
+  if (isJumping && !gameOverFlag) {
     if (jumpingY > maxJumpingY) {
+      if (backgroundMusic.paused) {
+        backgroundMusic.play();
+      }
+      jumpSound.currentTime = 0;
+      jumpSound.play();
+
       velocity = Math.sqrt((canvas.height - jumpingY) * g * 0.2);
       jumpingY = jumpingY - velocity * 0.15;
     } else if (jumpingY <= maxJumpingY) {
@@ -184,8 +193,8 @@ function drawObstacles() {
 }
 
 function createObstacle() {
-  const minHeight = 20;
-  const maxHeight = 80;
+  const minHeight = 50;
+  const maxHeight = 160;
   const randomHeight =
     Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
 
@@ -204,8 +213,8 @@ function createObstacle() {
 
   const obstacle = {
     x: obstacleX,
-    y: canvas.height - randomHeight - groundHeight,
-    width: 30,
+    y: canvas.height - randomHeight,
+    width: 40,
     height: randomHeight,
   };
   obstacles.push(obstacle);
@@ -226,7 +235,13 @@ function updateObstacles() {
     }
   });
 }
-
+function restartGame() {
+  gameStarted = false;
+  backgroundMusic.play();
+  jumpSound.pause();
+  collisionSound.pause();
+  document.location.reload();
+}
 // function checkCollisions() {
 //   obstacles.forEach((obstacle) => {
 //     if (
@@ -255,7 +270,10 @@ const collision = () => {
         snowmanX - snowmanRadius + 20 < obstacle.x &&
         snowmanX + snowmanRadius - 20 > obstacle.x
       ) {
+        collisionSound.currentTime = 0;
+        collisionSound.play();
         console.log("you lose");
+        gameOver();
       }
     } else {
       if (
@@ -267,7 +285,13 @@ const collision = () => {
     }
   });
 };
-
+function gameOver() {
+  clearInterval(obstacleInterval);
+  gameOverFlag = true;
+  restartButton.style.display = "block";
+  restartButton.addEventListener("click", restartGame);
+  backgroundMusic.pause();
+}
 setInterval(draw, 10);
 setInterval(createObstacle, 3000);
 
