@@ -26,20 +26,44 @@ const jumpSound = new Audio("../assets/sounds/cartoon-jump-6462.mp3");
 const collisionSound = new Audio("../assets/sounds/collision.mp3");
 
 function drawGround() {
-  ctx.beginPath();
-  ctx.rect(0, canvas.height - groundHeight, canvas.width, groundHeight);
-  ctx.fillStyle = "blue";
-  ctx.fill();
-  ctx.closePath();
+  
+  const gradient = ctx.createLinearGradient(0, canvas.height - groundHeight, 0, canvas.height);
+  gradient.addColorStop(1, 'blue');
+  gradient.addColorStop(0, 'aquamarine');
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
 }
 
-function drawSun(color, x, y, radius) {
+function drawMoon(color, x, y, radius) {
   ctx.fillStyle = color;
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.closePath();
   ctx.fill();
 }
+
+function drawStars(){
+  for(let i=1; i<=40;i++){
+    drawStar("white", 3.5);
+  }  
+}
+
+function drawStar(color, radius) {
+  const canvasWidth = 1000; // Adjust based on your canvas width
+  const canvasHeight = 600; // Adjust based on your canvas height
+  const x = Math.random() * canvasWidth;
+  const y = Math.random() * canvasHeight;
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+}
+
+
+
 
 function drawSnowman(y) {
   const headYMutiplier = 1.5;
@@ -53,17 +77,23 @@ function drawSnowman(y) {
   drawCircle("#000", 110, 381 + y * headYMutiplier, 2); // left eye
   drawCircle("#000", 90, 381 + y * headYMutiplier, 2); // right eye
 
-  drawCircle("#000", 100, 425 + y * bodyYMutiplier, 1.5); // bottom button
-  drawCircle("#000", 100, 445 + y * bodyYMutiplier, 1.5); // middle button
-  drawCircle("#000", 100, 465 + y * bodyYMutiplier, 1.5); // top button
+  drawCircle("#000", 100, 425 + y * bodyYMutiplier, 1.5); // mid bottom button
+  drawCircle("#000", 100, 445 + y * bodyYMutiplier, 1.5); // mid middle button
+  drawCircle("#000", 100, 465 + y * bodyYMutiplier, 1.5); // mid top button
+  drawCircle("#000", 100, 550 + y * bodyYMutiplier, 1.5); // low bottom button
+  drawCircle("#000", 100, 530 + y * bodyYMutiplier, 1.5); // low middle button
+  drawCircle("#000", 100, 510 + y * bodyYMutiplier, 1.5); // low top button
 
-  drawTriangle("#FFA500", 100, 387 + y * headYMutiplier, 3.5); // nose
+  drawTriangle("#FFA500", 100, 391    + y * headYMutiplier, 8); // nose
 
-  drawRectangle("#555454", 80, 356 + y * hatYMultiplier, 40, 5); // hat bottom
-  drawRectangle("#555454", 85, 340 + y * hatYMultiplier, 30, 20); // hat top
+  drawRectangle("red", 80, 356 + y * hatYMultiplier, 40, 5); // hat bottom
+  drawRectangle("green", 85, 336 + y * hatYMultiplier, 30, 20); // hat top
 
-  drawRectangle("#44261c", 135, 445 + y * bodyYMutiplier, 40, 5); // right arm
-  drawRectangle("#44261c", 25, 445 + y * bodyYMutiplier, 40, 5); // left arm
+  drawRectangle("red", 82, 395+ y * hatYMultiplier, 35, 11); // scarf
+  drawRectangle("green",117, 395 + y * hatYMultiplier, 9, 35 ) //scarf 2
+
+  drawRectangle("#44261c", 137, 445 + y * bodyYMutiplier, 30, 7); // right arm
+  drawRectangle("#44261c", 33, 445 + y * bodyYMutiplier, 30, 7); // left arm
 }
 
 function drawCircle(color, x, y, radius) {
@@ -100,8 +130,9 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   console.log(snowmanY);
-
-  drawSun("goldenrod", 850, 50, 30);
+  
+  drawMoon("lightyellow", 850, 50, 30); 
+  drawStars("white", 3); 
   drawSnowman(jumpingY);
   drawGround();
   drawObstacles();
