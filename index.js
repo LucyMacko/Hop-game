@@ -124,6 +124,11 @@ const draw = () => {
   snowmanY = 580 + jumpingY;
 
   collision();
+
+  ctx.fillStyle = "black";
+  ctx.font = "20px courier";
+  score++;
+  ctx.fillText(Math.floor(score / 10), 5, 40);
 };
 
 function drawObstacles() {
