@@ -33,7 +33,7 @@ body {
   display: flex;
   justify-content: space-between;
 }
-.intro-container {
+.text-display {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -42,13 +42,38 @@ body {
   color: white;
   background-color: #287fcb;
   z-index: 999;
+  display: none;
 }
 
-.intro-container h1 {
+.text-display h2 {
   font-size: 36px;
   margin-bottom: 20px;
 }
 
-.intro-container p {
+.text-display p {
   font-size: 24px;
+}
+
+.show {
+  display: block;
+}
+
+.start-text {
+  position: absolute;
+  text-align: center;
+  top: 300px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  animation: blinking 500ms infinite alternate-reverse both ease-in;
+}
+
+@keyframes blinking {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }

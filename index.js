@@ -1,6 +1,18 @@
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 const restartButton = document.getElementById("restartButton");
+const backgroundMusic = new Audio(
+  "./assets/sounds/cosmic-minimal-music-fragment-55131.mp3"
+);
+const jumpSound = new Audio("./assets/sounds/cartoon-jump-6462.mp3");
+const collisionSound = new Audio("./assets/sounds/collision.mp3");
+
+const allGameScreens = document.querySelectorAll(".text-display");
+const gameOverScreen = document.querySelector(".game-over");
+const introScreen = document.querySelector(".intro-container");
+const pauseScreen = document.querySelector(".pause");
+
+backgroundMusic.loop = true;
 
 let obstacles = [];
 let score = 0;
@@ -22,11 +34,31 @@ let gameOverFlag = false;
 let isGameOver = false;
 let isPaused = false;
 let isPlaying = false;
+
 document.addEventListener("keypress", function (event) {
-  if (event.key === "Enter") {
-    startGame();
+  switch (event.key) {
+    case " ":
+      jumpSound.currentTime = 0;
+      jumpSound.play();
+      if (snowmanY < 579) return;
+      isJumping = true;
+      break;
+    case "p":
+      if (!isGameOver && obstacles.length !== 0) {
+        isPaused = !isPaused;
+        isPlaying = !isPlaying;
+      }
+      break;
+    case "Enter":
+      if (!isPaused && !isPlaying)
+        isGameOver ? resetGame() : (isPlaying = true);
+      break;
+    default:
+      console.log("wrong key");
+      break;
   }
 });
+
 function displayIntroStory() {
   alert(
     "In the heart of a snowy mountain range, a friendly snowman finds himself in a dire situation. A colossal avalanche is racing down the mountainside, threatening to bury everything in its path! With no time to waste, our brave snowman must navigate through treacherous obstacles and icy perils to escape the avalanche's fury. Will you guide our frosty friend to safety? Press 'Enter' to begin the adventure!"
@@ -34,19 +66,6 @@ function displayIntroStory() {
 }
 displayIntroStory();
 let bestScore = localStorage.getItem("bestScore") || 0;
-
-function startGame() {
-  document.querySelector(".intro-container").style.display = "none";
-}
-
-const backgroundMusic = new Audio(
-  "./assets/sounds/cosmic-minimal-music-fragment-55131.mp3"
-);
-const jumpSound = new Audio("./assets/sounds/cartoon-jump-6462.mp3");
-const collisionSound = new Audio("./assets/sounds/collision.mp3");
-backgroundMusic.loop = true;
-
-backgroundMusic.loop = true;
 
 function updateBestScore(score) {
   if (score > bestScore) {
@@ -60,6 +79,7 @@ function displayBestScore(ctx) {
   ctx.font = "20px Arial";
   ctx.fillText("Best Score: " + bestScore, canvas.width - 150, 30);
 }
+
 const resetGame = () => {
   score = 0;
   obstacles = [];
@@ -68,33 +88,9 @@ const resetGame = () => {
   isPaused = false;
 };
 
-const handleKeyPress = (e) => {
-  switch (e.key) {
-    case " ":
-      jumpSound.currentTime = 0;
-      jumpSound.play();
-      if (snowmanY < 579) return;
-      isJumping = true;
-      break;
-    case "p":
-      if (!isGameOver && score !== 0) {
-        isPaused = !isPaused;
-        isPlaying = !isPlaying;
-      }
-      break;
-    case "Enter":
-      if (!isPaused && !isPlaying)
-        isGameOver ? resetGame() : (isPlaying = true);
-      break;
-
-    default:
-      break;
-  }
-  if (e.key === " ") {
-  }
-};
-
 const draw = () => {
+  allGameScreens.forEach((screen) => screen.classList.remove("show"));
+
   if (!isPlaying) {
     backgroundMusic.pause();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -104,7 +100,6 @@ const draw = () => {
     else drawRules();
     updateBestScore(score);
     displayBestScore(ctx);
-    drawStartNewGame();
   }
 
   if (isPlaying) {
@@ -241,36 +236,20 @@ function drawRectangle(color, x, y, width, height) {
 }
 
 const drawGameOver = () => {
-  ctx.font = "24px Arial";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(`Game Over`, 400, 300);
-
-  ctx.font = "16px Arial";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(`Score: ${score}`, 425, 330);
+  document.getElementById("score-display").textContent = score.toString();
+  gameOverScreen.classList.add("show");
 };
 
 const drawRules = () => {
-  ctx.font = "18px courier";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(`"Space bar" : jump`, 375, 300);
-  ctx.fillText(`"P" : Pause/Unpause`, 375, 330);
+  introScreen.classList.add("show");
 };
 
 const drawStartNewGame = () => {
-  ctx.font = "18px courier";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(`Press "Enter" to start a new game`, 325, 500);
+  introScreen.classList.add("show");
 };
 
 const drawPause = () => {
-  ctx.font = "24px courier";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(`Pause`, 415, 300);
-
-  ctx.font = "16px courier";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(`Press 'P' to continue`, 375, 330);
+  pauseScreen.classList.add("show");
 };
 
 function drawObstacles() {
@@ -351,14 +330,12 @@ const collision = () => {
       ) {
         collisionSound.currentTime = 0;
         collisionSound.play();
-        // gameOver();
         isGameOver = true;
         isPlaying = false;
       }
     }
   });
 };
+
 draw();
 setInterval(createObstacle, 3000);
-
-document.addEventListener("keypress", handleKeyPress, false);
