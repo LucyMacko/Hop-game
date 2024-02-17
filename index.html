@@ -2,30 +2,44 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="./assets/css/styles.css">
-    <title>Hop Game</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+  <link rel="shortcut icon" href="./assets/images/snowman-solid.svg" type="image/x-icon">
+  <title>Hop Game</title>
 </head>
 
 <body>
-    <header>
-        <h1 class="title">Do you wanna kill a snowman🎵</h1>
-    </header>
-    <main>
-        <figure>
-            <canvas id="myCanvas" width="1000" height="600"></canvas>
-        </figure>
+  <header>
+    <h1 class="title">Do you wanna kill a snowman🎵</h1>
+  </header>
 
-        <section class="container">
-            <p class="result">Score:<span id="score">0</span></p>
-            <button class="start-btn" id="start">Start the game</button>
-        </section>
-    </main>
-    <footer>
-        <p>Kreativstorm project</p>
-    </footer>
+  <main>
+    <figure class="text-display intro-container">
+      <h2>Welcome to Avalanche Escape</h2>
+      <p>Help the snowman escape from the avalanche!</p>
+      <p>Press 'Space' to jump.</p>
+      <p>Press 'P' to pause the game.</p>
+      <p class="start-text">Press 'Enter' to start the game</p>
+    </figure>
+    <figure class="text-display game-over">
+      <h2>Game Over</h2>
+      <p>Score:<span id="score-display">0</span></p>
+      <p class="start-text">Press 'Enter' to restart the game.</p>
+    </figure>
+    <figure class="text-display pause">
+      <h2>Pause</h2>
+      <p>Press 'P' to continue.</p>
+    </figure>
+    <figure>
+      <canvas id="myCanvas" width="1000" height="600"></canvas>
+    </figure>
+  </main>
 
-    <script type="text/javascript" src="index.js"></script>
+  <footer>
+    <p>Kreativstorm project</p>
+  </footer>
+
+  <script type="text/javascript" src="index.js"></script>
 </body>
 
 </html>
